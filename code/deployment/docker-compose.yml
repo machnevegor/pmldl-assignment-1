@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: ../..
+      dockerfile: code/deployment/Dockerfile
+    command: poetry run fastapi run code/deployment/api/api.py
+    ports:
+      - "8000:8000"
+    environment:
+      - CKPT_PATH=/pmldl-assignment-1/models/model.pt
+
+  app:
+    build:
+      context: ../..
+      dockerfile: code/deployment/Dockerfile
+    command: poetry run streamlit run code/deployment/app/app.py
+    ports:
+      - "8501:8501"
+    environment:
+      - ENDPOINT=http://api:8000/predict
